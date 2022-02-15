@@ -1,0 +1,54 @@
+---
+title: "Bayesian SEM workshop"
+author: "Sara van Erp"
+date: "2/15/2022"
+output: ioslides_presentation
+---
+
+## Overview
+
+- Introduction
+  + Bayesian analysis
+  + Why use Bayesian SEM?
+  + Why not to use Bayesian SEM?
+- Break
+- Prior specification
+  + Hands-on session prior specification
+- A Bayesian SEM example
+- Exercises
+- Additional information
+
+# Introduction
+
+## Bayesian analysis
+
+## Why use Bayesian SEM?
+
+## Why not to use Bayesian SEM?
+
+# Questions?
+
+# Prior specification
+
+## Types of priors
+
+## A warning on default priors
+
+## The power of the prior
+- weakly informative priors
+- informative priors
+- shrinkage priors
+
+## Prior sensitivity checks
+
+## Hands-on: Prior specification
+with shiny BSEM
+
+# A Bayesian SEM example
+
+# Exercises
+
+# Additional information
+
+
+
