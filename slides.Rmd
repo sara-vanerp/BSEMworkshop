@@ -1,8 +1,10 @@
 ---
-title: "Bayesian SEM workshop"
-author: "Sara van Erp"
-date: "2/15/2022"
-output: ioslides_presentation
+title: "Bayesian Sructural Equation Modeling"
+author: "Sara van Erp [TODO: add info]"
+date: "09-03-2022"
+output: 
+  ioslides_presentation: 
+    incremental: true
 ---
 
 ## Overview
@@ -18,13 +20,60 @@ output: ioslides_presentation
 - Exercises
 - Additional information
 
-# Introduction
+# Introduction 
 
-## Bayesian analysis
+## Bayesian analysis 
+
+<div style="float: left; width: 50%;">
+**Frequentist estimation** 
+<ul>
+  <li>Probability as long-run relative frequency</li>  
+  <li>Parameters are fixed</li> 
+  <li>Estimation through optimization</li> 
+</ul>
+</div>
+
+<div style="float: right; width: 50%;">
+**Bayesian estimation**  
+<ul>
+  <li>Probability as belief</li>   
+  <li>Parameters are random and can be assigned a *prior*</li>   
+  <li>Estimation through sampling</li> 
+</ul>
+</div>
+
+## Bayesian analysis {.build}
+
+Bayesian estimation relies on the data and the prior: 
+$$
+p(\pmb{\theta}|Y) \propto p(Y|\pmb{\theta})p(\pmb{\theta})
+$$
+
+```{r eval = TRUE, echo = FALSE}
+# TODO: add plot prior, likelihood and posterior
+plot(density(rnorm(100)))
+```
 
 ## Why use Bayesian SEM?
 
+Bayesian SEM: specify a prior for each parameter and build the posterior using MCMC sampling.
+
+*Advantages*
+
+- Add information via the prior
+  - smaller samples needed
+  - regularization of estimates
+- More complex models can be estimated
+- Automatic uncertainty estimates
+
 ## Why not to use Bayesian SEM?
+
+- Add information via the prior
+- MCMC sampling requires assessment of convergence
+- Relatively novel
+  - active area of research
+  - availability in software
+  - researchers unfamiliar
 
 # Questions?
 
@@ -50,5 +99,16 @@ with shiny BSEM
 
 # Additional information
 
+## References 
 
+*Bayesian introductory texts*
 
+TODO: add links
+
+<font size = "3">
+Etz, A., Gronau, Q. F., Dablander, F., Edelsbrunner, P. A., & Baribault, B. (2017). How to become a Bayesian in eight easy steps: An annotated reading list. Psychonomic Bulletin & Review, 25(1), 219–234. \
+
+Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013). Bayesian data analysis (3rd ed.). Chapman and Hall/CRC.
+</font>
+
+BSEM book Depaoli
