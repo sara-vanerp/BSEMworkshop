@@ -81,19 +81,76 @@ Bayesian SEM: specify a prior for each parameter and build the posterior using M
 
 ## Types of priors
 
+- Priors vary in the amount of information they carry
+- From "non-informative" to highly informative
+- Informativeness of the prior depends on the problem
+
+<br>
+<br>
+
+```{r fig.show = "hold", out.width = "33%", eval = TRUE, echo = FALSE}
+n <- 10e5
+
+# non-informative
+sd1 <- sqrt(10^10)
+plot(density(rnorm(n, mean = 0, sd = sd1)),
+     type = "l",
+     yaxt = "n",
+     xlab = "",
+     ylab = "",
+     main = "Normal(0, 10^10)",
+     xlim = c(-5, 5))
+
+# informative
+sd2 <- 1
+plot(density(rnorm(n, mean = 0, sd = sd2)),
+     type = "l",
+     yaxt = "n",
+     xlab = "",
+     ylab = "",
+     main = "Normal(0, 1)",
+     xlim = c(-5, 5))
+
+# highly informative
+sd3 <- 0.1
+plot(density(rnorm(n, mean = 0, sd = sd3)),
+     type = "l",
+     yaxt = "n",
+     xlab = "",
+     ylab = "",
+     main = "Normal(0, 0.01)",
+     xlim = c(-5, 5))
+
+```
+
 ## A warning on default priors
 
+- Traditionally, heavy reliance on "default" priors
+- Adding no information through the prior can give the same results as ML
+- But: default priors can inadvertently influence the results, e.g. IG(.001, .001) prior (van Erp et al. (2018); van Erp & Browne (2021))
+- Some software programs are not explicit about their priors, but it can be influential
+
 ## The power of the prior
-- weakly informative priors
-- informative priors
-- shrinkage priors
 
-## Prior sensitivity checks
+- Weakly informative priors to regularize estimates
+- Informative priors to include prior research or expert opinions
+- Shrinkage priors to identify non-identified models
 
-## Hands-on: Prior specification
-with shiny BSEM
+## How to be careful with the prior
 
-# A Bayesian SEM example
+- Carefully consider the priors (or look up the automatic defaults)
+- Plot the priors (prior predictive checks)
+- Conduct a prior sensitivity analysis
+
+## Hands-on: Prior specification with Shiny BSEM
+
+Go to: ... \
+
+Think about reasonable priors for all parameters (or use the defaults) and inspect the results. \
+
+Change the priors to see how this influences the results. 
+
+# A Bayesian SEM example with blavaan
 
 # Exercises
 
@@ -112,3 +169,8 @@ Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D.
 </font>
 
 BSEM book Depaoli
+
+*Prior sensitivity*
+Van Erp, S., Mulder, J., & Oberski, D. L. (2018). Prior sensitivity analysis in default bayesian structural equation modeling. Psychological Methods, 23(2), 363-388. \
+
+Van Erp, S. & Browne, W. J. (2021). Bayesian Multilevel Structural Equation Modeling: An Investigation into Robust Prior Distributions for the Doubly Latent Categorical Model. Structural Equation Modeling: A Multidisciplinary Journal, 28:6, 875-893.
