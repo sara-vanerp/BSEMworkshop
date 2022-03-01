@@ -152,6 +152,9 @@ Change the priors to see how this influences the results.
 
 # A Bayesian SEM example with blavaan
 
+## Political democracy example
+<img src="PD_model.png" alt="model" width="450"/>
+
 # Exercises
 
 # Additional information
