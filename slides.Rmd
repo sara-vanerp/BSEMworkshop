@@ -155,6 +155,20 @@ Change the priors to see how this influences the results.
 ## Political democracy example
 <img src="PD_model.png" alt="model" width="450"/>
 
+## Step 1: Define the model
+
+## Step 2: Consider the priors
+
+## Step 3: Run the model
+
+## Step 4: Check convergence
+
+## Step 5: Check the results
+
+## Step 6: Prior sensitivity analysis
+
+Some general tips (leave the rest for the exercises)
+
 # Exercises
 
 # Additional information
@@ -173,7 +187,17 @@ Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D.
 
 BSEM book Depaoli
 
+WAMBS checklist
+
 *Prior sensitivity*
 Van Erp, S., Mulder, J., & Oberski, D. L. (2018). Prior sensitivity analysis in default bayesian structural equation modeling. Psychological Methods, 23(2), 363-388. \
 
 Van Erp, S. & Browne, W. J. (2021). Bayesian Multilevel Structural Equation Modeling: An Investigation into Robust Prior Distributions for the Doubly Latent Categorical Model. Structural Equation Modeling: A Multidisciplinary Journal, 28:6, 875-893.
+
+*Blavaan*
+papers merkle
+
+https://www.rensvandeschoot.com/tutorials/blavaan-how-to-get-started/
+
+*Fit indices*
+Garnier-Villareal & Jorgensen
