@@ -1,0 +1,51 @@
+---
+title: "Bayesian Structural Equation Modeling Workshop - Exercises"
+author: "Sara van Erp"
+date: "09-03-2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+These exercises are part of the workshop "Bayesian Structural Equation Modeling". In these exercises, you will conduct a Bayesian SEM analysis on an example data set, with a special focus on conducting a prior sensitivity analysis. If you have your own data you wish to analyze, feel free to adapt the exercises to apply them to your own data instead of the example data set. Make sure you have the `blavaan` package loaded.
+
+```{r}
+library(blavaan)
+```
+
+
+## Data
+In these exercises, we will conduct a confirmatory factor analysis (CFA) with the classic Holzinger and Swineford data. You can find more information about the data as follows:
+
+```{r}
+?HolzingerSwineford1939
+```
+
+## Model
+We will fit the following three-factor CFA model to these data:
+
+```{r}
+HS.model <- ' visual  =~ x1 + x2 + x3 
+              textual =~ x4 + x5 + x6
+              speed   =~ x7 + x8 + x9 '
+```
+
+## Priors
+Before we can fit our model, we need to consider the priors. Think about all the parameters in the model. Use the `dpriors()` function to check the default priors in `blavaan` and write down which default prior each parameter would get. It can be helpful to do so by creating a table with in one column the original parameter (e.g. `visual =~ x1`), in one column the `blavaan` notation (e.g. `lambda`), and then a column with the `blavaan` default prior for that parameter.
+
+Most of the prior distributions should look familiar. One exception might be the `lkj_corr(1)` prior. The Lewandowski-Kurowicka-Joe (LKJ) distribuion is often used for correlation matrices. Its hyperparameter $\eta = 1$ by default which implies a uniform prior on the correlations. $\eta > 1$ implies correlations around 0, while $0 < \eta < 1$ implies a prior centered at the ends of the scale, thus favoring both positive and negative correlations. We will now focus on understanding this prior better.
+
+### Visualizing the priors
+Sample from the default prior distributions and plot the prior for the latent variable covariances.
+
+```{r}
+priors.def <- bcfa(HS.model,
+                   data = HolzingerSwineford1939,
+                   prisamp = TRUE,
+                   sample = 1000)
+```
+
+
