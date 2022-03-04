@@ -50,8 +50,29 @@ p(\pmb{\theta}|Y) \propto p(Y|\pmb{\theta})p(\pmb{\theta})
 $$
 
 ```{r eval = TRUE, echo = FALSE}
-# TODO: add plot prior, likelihood and posterior
-plot(density(rnorm(100)))
+# data
+n <- 1
+md <- 10
+sdd <- 1
+x <- rnorm(n, mean = md, sd = sdd)
+
+# prior
+m0 <- 0
+sd0 <- 1
+
+# posterior
+post.mean <- ((n/(sdd^2) + 1/(sd0^2))^-1)*(n/(sdd^2) * mean(x) + 1/(sd0^2)*m0)
+post.sd <- sqrt((n/(sdd^2) + 1/(sd0^2))^-1)
+
+# plot
+ggplot(data = data.frame(x = c(-5, 15)), aes(x)) + 
+  stat_function(fun = dnorm, n = 200, args = list(mean = m0, sd = sd0), aes(linetype = "Prior")) +
+  stat_function(fun = dnorm, n = 200, args = list(mean = md, sd = sdd), aes(linetype = "Likelihood")) +
+  stat_function(fun = dnorm, n = 200, args = list(mean = post.mean, sd = post.sd), aes(linetype = "Posterior")) +
+  scale_linetype_manual("", values = c(3, 1, 2)) +
+  labs(x = "", y = "") +
+  theme_bw(base_size = 14) + 
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
 ```
 
 ## Why use Bayesian SEM?
