@@ -1,6 +1,6 @@
 ---
-title: "Bayesian Sructural Equation Modeling"
-author: "Sara van Erp [TODO: add info]"
+title: "Bayesian Structural Equation Modeling"
+author: "[Sara van Erp](https://saravanerp.com), s.j.vanerp@uu.nl"
 date: "09-03-2022"
 output: 
   ioslides_presentation: 
@@ -155,19 +155,145 @@ Change the priors to see how this influences the results.
 ## Political democracy example
 <img src="PD_model.png" alt="model" width="450"/>
 
+## Packages
+```{r}
+library(blavaan)
+library(bayesplot)
+```
+
+
 ## Step 1: Define the model
+See the [lavaan website](https://lavaan.ugent.be/tutorial/index.html) for more information about lavaan syntax.
 
-## Step 2: Consider the priors
+```{r}
+mod0 <- '
+  # measurement model
+    ind60 =~ x1 + x2 + x3
+    dem60 =~ y1 + y2 + y3 + y4
+    dem65 =~ y5 + y6 + y7 + y8
+  # regressions
+    dem60 ~ ind60
+    dem65 ~ ind60 + dem60
+  # residual correlations
+    y1 ~~ y5
+    y2 ~~ y4 + y6
+    y3 ~~ y7
+    y4 ~~ y8
+    y6 ~~ y8
+'
+```
 
-## Step 3: Run the model
+## Step 2: Priors - blavaan defaults
+```{r}
+# check the blavaan defaults
+dpriors()
+```
+
+## Step 2: Priors - plotting the defaults (1)
+```{r, results = 'hide', message = FALSE, warning = FALSE}
+priors0 <- bsem(mod0, 
+                data = PoliticalDemocracy,
+                prisamp = TRUE,
+                sample = 10)
+```
+
+```{r}
+samples0 <- as.matrix(blavInspect(priors0, what = "mcmc"))
+pars <- dimnames(samples0)[[2]]
+mcmc_areas(na.omit(samples0),
+           pars = pars[9])
+```
+
+## Step 2: Priors - plotting the defaults (2)
+```{r}
+plot(density(rnorm(10000, mean = 0, sd = 10)),
+     xlab = "",
+     ylab = "",
+     main = "",
+     yaxt = "n")
+```
+
+## Step 2: Change the priors (1)
+```{r results = 'hide', message = FALSE, warning = FALSE}
+mod1 <- '
+  # measurement model
+    ind60 =~ x1 + x2 + x3
+    dem60 =~ y1 + y2 + y3 + y4
+    dem65 =~ y5 + y6 + y7 + y8
+  # regressions
+    dem60 ~ prior("normal(0.5, 1)")*ind60
+    dem65 ~ ind60 + dem60
+  # residual correlations
+    y1 ~~ y5
+    y2 ~~ y4 + y6
+    y3 ~~ y7
+    y4 ~~ y8
+    y6 ~~ y8
+'
+priors1 <- bsem(mod1, 
+                data = PoliticalDemocracy,
+                prisamp = TRUE, 
+                sample = 10)
+samples1 <- as.matrix(blavInspect(priors1, what = "mcmc"))
+mcmc_areas(na.omit(samples1),
+           pars = pars[9])
+```
+
+## Step 2: Change the priors (2)
+```{r results = 'hide', message = FALSE, warning = FALSE}
+mcmc_areas(na.omit(samples1),
+           pars = pars[29])
+
+priors2 <- bsem(mod0,
+                data = PoliticalDemocracy,
+                dp = dpriors(psi = "gamma(1,.5)[var]"),
+                prisamp = TRUE,
+                sample = 10)
+samples2 <- as.matrix(blavInspect(priors2, what = "mcmc"))
+mcmc_areas(na.omit(samples2),
+           pars = pars[29])
+```
+
+## Step 3: Run the model 
+```{r results = 'hide', message = FALSE, warning = FALSE}
+fit <- bsem(mod0, 
+            data = PoliticalDemocracy,
+            n.chains = 3,
+            burnin = 50,
+            sample = 100)
+```
 
 ## Step 4: Check convergence
+```{r}
+summary(fit)
+plot(fit, pars = c(1:8), plot.type = "trace")
+```
 
-## Step 5: Check the results
+## Step 5: Check the results (1)
+```{r}
+plot(fit, pars = c(9:11), plot.type = "areas")
+```
+
+## Step 5: Check the results (2)
+```{r}
+plot(fit, pars = c(1:8), plot.type = "intervals")
+```
+
+## Step 5: Check the results (3)
+```{r}
+fitind <- blavFitIndices(fit)
+summary(fitind)
+```
 
 ## Step 6: Prior sensitivity analysis
 
-Some general tips (leave the rest for the exercises)
+- Rerun the analysis with different priors
+- Change all priors for one type of parameter simultaneously
+- When default priors are used, check different default priors
+- When (weakly) informative priors are used, change the informativeness
+- Report a range of results
+- Focus on the outcome of interest (e.g. a specific estimate, whether a 95%CI contains 0, etc.)
+- Goal is to get an idea of the robustness of the results
 
 # Exercises
 
@@ -175,29 +301,44 @@ Some general tips (leave the rest for the exercises)
 
 ## References 
 
-*Bayesian introductory texts*
-
-TODO: add links
-
+*General Bayesian (introductory) texts*
 <font size = "3">
 Etz, A., Gronau, Q. F., Dablander, F., Edelsbrunner, P. A., & Baribault, B. (2017). How to become a Bayesian in eight easy steps: An annotated reading list. Psychonomic Bulletin & Review, 25(1), 219–234. \
 
-Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013). Bayesian data analysis (3rd ed.). Chapman and Hall/CRC.
+Depaoli, S., & Van de Schoot, R. (2017). Improving transparency and replication in Bayesian statistics: The WAMBS-Checklist. Psychological methods, 22(2), 240.\
+
+Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013). Bayesian data analysis (3rd ed.). Chapman and Hall/CRC. \
 </font>
+<br>
 
-BSEM book Depaoli
+*Bayesian SEM*
+<font size = "3">
+Depaoli, S. (2021). Bayesian Structural Equation Modeling. Guilford Press. \
 
-WAMBS checklist
+Lee, S-Y. (2007). Structural Equation Modeling: A Bayesian Approach. Wiley. \
+</font>
+<br>
 
 *Prior sensitivity*
+<font size = "3">
 Van Erp, S., Mulder, J., & Oberski, D. L. (2018). Prior sensitivity analysis in default bayesian structural equation modeling. Psychological Methods, 23(2), 363-388. \
 
 Van Erp, S. & Browne, W. J. (2021). Bayesian Multilevel Structural Equation Modeling: An Investigation into Robust Prior Distributions for the Doubly Latent Categorical Model. Structural Equation Modeling: A Multidisciplinary Journal, 28:6, 875-893.
+</font>
+<br>
 
 *Blavaan*
-papers merkle
+<font size = "3">
+Merkle, E. C., & Rosseel, Y. (2018). blavaan: Bayesian Structural Equation Models via Parameter Expansion. Journal of Statistical Software, 85, 1-30. \
 
-https://www.rensvandeschoot.com/tutorials/blavaan-how-to-get-started/
+Merkle, E. C., Fitzsimmons, E., Uanhoro, J., & Goodrich, B. (2021). Efficient Bayesian Structural Equation Modeling in Stan. Journal of Statistical Software, 100, 1-22. \
+
+[Online tutorial](https://www.rensvandeschoot.com/tutorials/blavaan-how-to-get-started/) \
+</font>
+<br>
 
 *Fit indices*
-Garnier-Villareal & Jorgensen
+<font size = "3">
+Garnier-Villarreal, M., & Jorgensen, T. D. (2020). Adapting fit indices for Bayesian structural equation modeling: Comparison to maximum likelihood. Psychological Methods, 25(1), 46.
+
+</font>
