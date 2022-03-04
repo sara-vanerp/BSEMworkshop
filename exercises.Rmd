@@ -36,16 +36,58 @@ HS.model <- ' visual  =~ x1 + x2 + x3
 ## Priors
 Before we can fit our model, we need to consider the priors. Think about all the parameters in the model. Use the `dpriors()` function to check the default priors in `blavaan` and write down which default prior each parameter would get. It can be helpful to do so by creating a table with in one column the original parameter (e.g. `visual =~ x1`), in one column the `blavaan` notation (e.g. `lambda`), and then a column with the `blavaan` default prior for that parameter.
 
-Most of the prior distributions should look familiar. One exception might be the `lkj_corr(1)` prior. The Lewandowski-Kurowicka-Joe (LKJ) distribuion is often used for correlation matrices. Its hyperparameter $\eta = 1$ by default which implies a uniform prior on the correlations. $\eta > 1$ implies correlations around 0, while $0 < \eta < 1$ implies a prior centered at the ends of the scale, thus favoring both positive and negative correlations. We will now focus on understanding this prior better.
+Most of the prior distributions should look familiar. One exception might be the `lkj_corr(1)` prior. The Lewandowski-Kurowicka-Joe (LKJ) distribuion is often used for correlation matrices. Its hyperparameter $\eta = 1$ by default which implies a uniform prior on the correlations.
 
 ### Visualizing the priors
 Sample from the default prior distributions and plot the prior for the latent variable covariances.
 
-```{r}
+```{r, results = FALSE}
 priors.def <- bcfa(HS.model,
                    data = HolzingerSwineford1939,
                    prisamp = TRUE,
                    sample = 1000)
+
+plot(priors.def,
+     pars = c(19:21),
+     plot.type = "areas")
+```
+Consider the resulting priors. Do they result in values for the latent variable covariances that are reasonable? 
+<br>
+You might find it difficult to determine whether the resulting priors for the latent variable covariances are reasonable or not. In this situation, it might be more insightful to consider the priors on the latent variable correlations since correlations have known bounds (i.e., a correlation must lie between -1 and 1). Add the argument `std.lv = TRUE` to the code to sample from the prior. This will ensure that the model is identified by fixing the mean and variance of the latent variables. Plot the priors for the latent variable correlations. Are the resulting priors reasonable?
+
+```{r, echo = FALSE, results = FALSE}
+priors.def <- bcfa(HS.model,
+                   std.lv = TRUE,
+                   data = HolzingerSwineford1939,
+                   prisamp = TRUE,
+                   sample = 1000)
+
+plot(priors.def,
+     pars = c(19:21),
+     plot.type = "areas")
+```
+Now, let's adapt the hyperparameter $\eta$ of the LKJ prior on the latent variable correlations. Remember that the prior can be changed either per parameter in the model specification, or for all similar parameters in the sampling call. Since we want to adapt the prior for all latent variable correlations, we will use the latter method. TODO: This does not seem possible, so need to specify directly within the model
+
+```{r results = FALSE}
+priors.def <- bcfa(HS.model,
+                   std.lv = TRUE,
+                   data = HolzingerSwineford1939,
+                   dp = dpriors(ibpsi = "wishart(3,iden)"),
+                   prisamp = TRUE,
+                   sample = 1000)
+
+plot(priors.def,
+     pars = c(19:21),
+     plot.type = "areas")
 ```
 
+Exercise: use different values, at least eta < 1 and >1. What do you see?
+
+Consider the other priors -> do they seem reasonable?
+
+Fit the model with either the defaults, or change some priors if you believe this to be important.
+
+Interpret the results.
+
+Prior sensitivity analysis focusing on the prior for the latent variable correlations. e.g. 3 values and report resulting estimates correlations and see if the main loadings change as well.
 
