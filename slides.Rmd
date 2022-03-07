@@ -8,7 +8,6 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 ```
 
@@ -227,8 +226,10 @@ priors0 <- bsem(mod0,
 samples0 <- as.matrix(blavInspect(priors0, what = "mcmc"))
 pars <- dimnames(samples0)[[2]]
 mcmc_areas(na.omit(samples0),
-           pars = pars[9])
+           pars = pars[9:11])
 ```
+
+---
 
 ```{r plot_priors0, echo = FALSE, eval = TRUE}
 ```
@@ -236,14 +237,11 @@ mcmc_areas(na.omit(samples0),
 ## Step 2: Priors - plotting the defaults (2)
 ```{r}
 plot(density(rnorm(10000, mean = 0, sd = 10)),
-     xlab = "",
-     ylab = "",
-     main = "",
-     yaxt = "n")
+     xlab = "", ylab = "", main = "", yaxt = "n")
 ```
 
-## Step 2: Change the priors (1)
-```{r priors1, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE}
+## Step 2: Change the priors (1) {.smaller}
+```{r priors1, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE, echo = TRUE, eval = FALSE}
 mod1 <- '
   # measurement model
     ind60 =~ x1 + x2 + x3
@@ -265,7 +263,12 @@ priors1 <- bsem(mod1,
                 sample = 1000)
 samples1 <- as.matrix(blavInspect(priors1, what = "mcmc"))
 mcmc_areas(na.omit(samples1),
-           pars = pars[9])
+           pars = pars[9:11])
+```
+
+---
+
+```{r priors1, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE, echo = FALSE, eval = TRUE}
 ```
 
 ## Step 2: Change the priors (2)
