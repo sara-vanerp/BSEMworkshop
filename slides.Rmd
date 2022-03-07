@@ -182,7 +182,7 @@ Change the priors to see how this influences the results.
 <img src="PD_model.png" alt="model" width="450"/>
 
 ## Packages
-```{r}
+```{r message = FALSE}
 library(blavaan)
 library(bayesplot)
 ```
@@ -223,11 +223,14 @@ priors0 <- bsem(mod0,
                 sample = 1000)
 ```
 
-```{r}
+```{r plot_priors0, echo = TRUE, eval = FALSE}
 samples0 <- as.matrix(blavInspect(priors0, what = "mcmc"))
 pars <- dimnames(samples0)[[2]]
 mcmc_areas(na.omit(samples0),
            pars = pars[9])
+```
+
+```{r plot_priors0, echo = FALSE, eval = TRUE}
 ```
 
 ## Step 2: Priors - plotting the defaults (2)
