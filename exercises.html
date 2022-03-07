@@ -188,6 +188,88 @@ pre code {
 <p>In these exercises, we will conduct a confirmatory factor analysis (CFA) with the classic Holzinger and Swineford data. You can find more information about the data as follows:</p>
 <pre class="r"><code>?HolzingerSwineford1939</code></pre>
 </div>
+<div id="model" class="section level2">
+<h2>Model</h2>
+<p>We will fit the following three-factor CFA model to these data:</p>
+<pre class="r"><code>HS.model &lt;- &#39; visual  =~ x1 + x2 + x3 
+              textual =~ x4 + x5 + x6
+              speed   =~ x7 + x8 + x9 &#39;</code></pre>
+</div>
+<div id="priors" class="section level2">
+<h2>Priors</h2>
+<p>Before we can fit our model, we need to consider the priors. Think about all the parameters in the model. Use the <code>dpriors()</code> function to check the default priors in <code>blavaan</code> and write down which default prior each parameter would get. It can be helpful to do so by creating a table with in one column the original parameter (e.g. <code>visual =~ x1</code>), in one column the <code>blavaan</code> notation (e.g. <code>lambda</code>), and then a column with the <code>blavaan</code> default prior for that parameter.</p>
+<p>Most of the prior distributions should look familiar. Note that the <code>dpriors()</code> function reports a Wishart prior for <code>ibpsi</code>, the inverse covariance matrix of blocks of latent variables. However, this prior is not used in the default <code>stan</code> implementation of <code>blavaan</code>. Instead, the <code>lkj_corr(1)</code> prior is used as default. This can be seen by sampling from the priors or posterior and then calling the summary on the resulting fitobject. The Lewandowski-Kurowicka-Joe (LKJ) distribution is often used for correlation matrices. Its hyperparameter <span class="math inline">\(\eta = 1\)</span> by default which implies a uniform (beta) prior on the correlations.</p>
+<div id="visualizing-the-priors" class="section level3">
+<h3>Visualizing the priors</h3>
+<p>Sample from the default prior distributions and plot the prior for the latent variable covariances.</p>
+<pre class="r"><code>priors.def &lt;- bcfa(HS.model,
+                   data = HolzingerSwineford1939,
+                   prisamp = TRUE,
+                   sample = 1000)
+
+plot(priors.def,
+     pars = c(19:21),
+     plot.type = &quot;areas&quot;)</code></pre>
+<p>Consider the resulting priors. Do they result in values for the latent variable covariances that are reasonable? <br> You might find it difficult to determine whether the resulting priors for the latent variable covariances are reasonable or not. In this situation, it might be more insightful to consider the priors on the latent variable correlations since correlations have known bounds (i.e., a correlation must lie between -1 and 1). Add the argument <code>std.lv = TRUE</code> to the code to sample from the prior. This will ensure that the model is identified by fixing the mean and variance of the latent variables. Plot the priors for the latent variable correlations. Are the resulting priors reasonable?</p>
+<p>Now, let’s adapt the priors on the latent variable correlations. The <code>lkj_corr(1)</code> prior specified by default implies a <code>beta(1, 1)</code> prior which implies a uniform prior with support from -1 to 1. We can do so by adapting the model specification as follows:</p>
+<pre class="r"><code>HS.model2 &lt;- &#39; visual  =~ x1 + x2 + x3 
+              textual =~ x4 + x5 + x6
+              speed   =~ x7 + x8 + x9
+              visual ~~ prior(&quot;beta(1,1)&quot;)*textual
+              visual ~~ prior(&quot;beta(1,1)&quot;)*speed
+              textual ~~ prior(&quot;beta(1,1)&quot;)*speed&#39;</code></pre>
+<p>By changing the hyperparameters of the beta distributions in the model above, we can change the priors for the latent variable correlations. To do so, it can be helpful to first plot the beta prior using different hyperparameter settings. Note that, normally the <a href="https://en.wikipedia.org/wiki/Beta_distribution">beta</a> distribution has support from 0 to 1, but the implementation for correlations in <code>blavaan</code> is such that the support runs from -1 to 1. Therefore, we cannot use the regular <code>dbeta</code> function to visualize the prior. Instead, the following code can be used:</p>
+<pre class="r"><code>s1 &lt;- 1 # hyperparameter 1
+s2 &lt;- 1 # hyperparameter 2
+x &lt;- seq(.01, .99, .01)
+plot(-1 + 2*x, 
+     dbeta(x, shape1 = s1, shape2 = s2), 
+     type=&quot;l&quot;,
+     yaxt = &quot;n&quot;,
+     xlab = &quot;&quot;,
+     ylab = &quot;&quot;,
+     xlim = c(-1, 1))</code></pre>
+<p>Try out different values for the hyperparameters. Make sure to include values smaller than 1 as well as values larger than 1. Also make sure to use two equal and two different hyperparameters. Make sure that you understand the impact of changing these hyperparameters. We will use these results later on in the prior sensitivity analysis.</p>
+</div>
+</div>
+<div id="fit-the-model" class="section level2">
+<h2>Fit the model</h2>
+<p>Next, fit the model with the priors you find reasonable. Check the convergence. If the model has converged, check the estimates and the fit indices.</p>
+</div>
+<div id="prior-sensitivity-analysis" class="section level2">
+<h2>Prior sensitivity analysis</h2>
+<p>Next, we will conduct a prior sensitivity analysis in which we will focus on the priors for the latent variable correlations. Run the model with the following hyperparameter settings for the beta prior and compare the estimates for the latent variable correlations. Do they vary greatly?</p>
+<table>
+<thead>
+<tr class="header">
+<th>Hyperparameter 1</th>
+<th>Hyperparameter 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>0.1</td>
+<td>0.1</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 
 

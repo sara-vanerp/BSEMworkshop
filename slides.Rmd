@@ -4,8 +4,13 @@ author: "[Sara van Erp](https://saravanerp.com), s.j.vanerp@uu.nl"
 date: "09-03-2022"
 output: 
   ioslides_presentation: 
-    incremental: true
+    incremental: false
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
 
 ## Overview
 
@@ -148,7 +153,7 @@ plot(density(rnorm(n, mean = 0, sd = sd3)),
 
 - Traditionally, heavy reliance on "default" priors
 - Adding no information through the prior can give the same results as ML
-- But: default priors can inadvertently influence the results, e.g. IG(.001, .001) prior (van Erp et al. (2018); van Erp & Browne (2021))
+- But: default priors can inadvertently influence the results, e.g. IG(.001, .001) prior (<font size = "3">e.g., van Erp et al. (2018); van Erp & Browne (2021)</font>)
 - Some software programs are not explicit about their priors, but it can be influential
 
 ## The power of the prior
@@ -160,12 +165,12 @@ plot(density(rnorm(n, mean = 0, sd = sd3)),
 ## How to be careful with the prior
 
 - Carefully consider the priors (or look up the automatic defaults)
-- Plot the priors (prior predictive checks)
+- Visualize your priors
 - Conduct a prior sensitivity analysis
 
 ## Hands-on: Prior specification with Shiny BSEM
 
-Go to: ... \
+Go to: [https://github.com/sara-vanerp/shinyBSEM](https://github.com/sara-vanerp/shinyBSEM) \
 
 Think about reasonable priors for all parameters (or use the defaults) and inspect the results. \
 
@@ -211,11 +216,11 @@ dpriors()
 ```
 
 ## Step 2: Priors - plotting the defaults (1)
-```{r, results = 'hide', message = FALSE, warning = FALSE}
+```{r priors0, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE}
 priors0 <- bsem(mod0, 
                 data = PoliticalDemocracy,
                 prisamp = TRUE,
-                sample = 10)
+                sample = 1000)
 ```
 
 ```{r}
@@ -235,7 +240,7 @@ plot(density(rnorm(10000, mean = 0, sd = 10)),
 ```
 
 ## Step 2: Change the priors (1)
-```{r results = 'hide', message = FALSE, warning = FALSE}
+```{r priors1, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE}
 mod1 <- '
   # measurement model
     ind60 =~ x1 + x2 + x3
@@ -254,14 +259,14 @@ mod1 <- '
 priors1 <- bsem(mod1, 
                 data = PoliticalDemocracy,
                 prisamp = TRUE, 
-                sample = 10)
+                sample = 1000)
 samples1 <- as.matrix(blavInspect(priors1, what = "mcmc"))
 mcmc_areas(na.omit(samples1),
            pars = pars[9])
 ```
 
 ## Step 2: Change the priors (2)
-```{r results = 'hide', message = FALSE, warning = FALSE}
+```{r priors2, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE}
 mcmc_areas(na.omit(samples1),
            pars = pars[29])
 
@@ -269,19 +274,19 @@ priors2 <- bsem(mod0,
                 data = PoliticalDemocracy,
                 dp = dpriors(psi = "gamma(1,.5)[var]"),
                 prisamp = TRUE,
-                sample = 10)
+                sample = 1000)
 samples2 <- as.matrix(blavInspect(priors2, what = "mcmc"))
 mcmc_areas(na.omit(samples2),
            pars = pars[29])
 ```
 
 ## Step 3: Run the model 
-```{r results = 'hide', message = FALSE, warning = FALSE}
+```{r fit, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE}
 fit <- bsem(mod0, 
             data = PoliticalDemocracy,
             n.chains = 3,
-            burnin = 50,
-            sample = 100)
+            burnin = 500,
+            sample = 1000)
 ```
 
 ## Step 4: Check convergence
@@ -301,7 +306,7 @@ plot(fit, pars = c(1:8), plot.type = "intervals")
 ```
 
 ## Step 5: Check the results (3)
-```{r}
+```{r fitind, cache = TRUE}
 fitind <- blavFitIndices(fit)
 summary(fitind)
 ```
