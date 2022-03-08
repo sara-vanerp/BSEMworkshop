@@ -2,7 +2,9 @@
 title: "Bayesian Structural Equation Modeling Workshop - Exercises"
 author: "Sara van Erp"
 date: "09-03-2022"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -12,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Introduction
 These exercises are part of the workshop "Bayesian Structural Equation Modeling". In these exercises, you will conduct a Bayesian SEM analysis on an example data set, with a special focus on conducting a prior sensitivity analysis. If you have your own data you wish to analyze, feel free to adapt the exercises to apply them to your own data instead of the example data set. Make sure you have the `blavaan` package loaded.
 
-```{r}
+```{r, message = FALSE}
 library(blavaan)
 ```
 
@@ -53,6 +55,7 @@ plot(priors.def,
 ```
 Consider the resulting priors. Do they result in values for the latent variable covariances that are reasonable? 
 <br>
+<br>
 You might find it difficult to determine whether the resulting priors for the latent variable covariances are reasonable or not. In this situation, it might be more insightful to consider the priors on the latent variable correlations since correlations have known bounds (i.e., a correlation must lie between -1 and 1). Add the argument `std.lv = TRUE` to the code to sample from the prior. This will ensure that the model is identified by fixing the mean and variance of the latent variables. Plot the priors for the latent variable correlations. Are the resulting priors reasonable?
 
 ```{r, priorsdefstd, cache = TRUE, echo = FALSE, results = FALSE, fig.show = 'hide'}
@@ -66,6 +69,7 @@ plot(priors.def,
      pars = c(19:21),
      plot.type = "areas")
 ```
+## Adapting the priors
 Now, let's adapt the priors on the latent variable correlations. The `lkj_corr(1)` prior specified by default implies a `beta(1, 1)` prior which implies a uniform prior with support from -1 to 1. We can do so by adapting the model specification as follows:
 
 ```{r}
@@ -104,7 +108,12 @@ fit.def <- bcfa(HS.model,
                 sample = 1000)
 
 summary(fit.def)
-fitind <- blavFitIndices(fit.def)
+
+## fit null model to calculate CFI, TLI, and NFI
+null.model <- c(paste0("x", 1:9, " ~~ x", 1:9), paste0("x", 1:9, " ~ 1"))
+fit0 <- bcfa(null.model, data = HolzingerSwineford1939, 
+             n.chains = 3, burnin = 500, sample = 1000)
+fitind <- blavFitIndices(fit.def, baseline.model = fit0)
 summary(fitind)
 ```
 
@@ -119,7 +128,7 @@ Next, we will conduct a prior sensitivity analysis in which we will focus on the
 |   1   |   10   |
 |   10   |   1   |
 
-```{r, echo = FALSE, cache = TRUE, results = FALSE}
+```{r, echo = FALSE, cache = TRUE, results = FALSE, warning = FALSE}
 HS.model1 <- ' visual  =~ x1 + x2 + x3 
               textual =~ x4 + x5 + x6
               speed   =~ x7 + x8 + x9

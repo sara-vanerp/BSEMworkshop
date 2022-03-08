@@ -175,13 +175,6 @@ pre code {
 <h2>Introduction</h2>
 <p>These exercises are part of the workshop “Bayesian Structural Equation Modeling”. In these exercises, you will conduct a Bayesian SEM analysis on an example data set, with a special focus on conducting a prior sensitivity analysis. If you have your own data you wish to analyze, feel free to adapt the exercises to apply them to your own data instead of the example data set. Make sure you have the <code>blavaan</code> package loaded.</p>
 <pre class="r"><code>library(blavaan)</code></pre>
-<pre><code>## Loading required package: lavaan</code></pre>
-<pre><code>## This is lavaan 0.6-10
-## lavaan is FREE software! Please report any bugs.</code></pre>
-<pre><code>## Loading required package: Rcpp</code></pre>
-<pre><code>## This is blavaan 0.4-1</code></pre>
-<pre><code>## On multicore systems, we suggest use of future::plan(&quot;multicore&quot;) or
-##   future::plan(&quot;multisession&quot;) for faster post-MCMC computations.</code></pre>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
@@ -210,7 +203,11 @@ pre code {
 plot(priors.def,
      pars = c(19:21),
      plot.type = &quot;areas&quot;)</code></pre>
-<p>Consider the resulting priors. Do they result in values for the latent variable covariances that are reasonable? <br> You might find it difficult to determine whether the resulting priors for the latent variable covariances are reasonable or not. In this situation, it might be more insightful to consider the priors on the latent variable correlations since correlations have known bounds (i.e., a correlation must lie between -1 and 1). Add the argument <code>std.lv = TRUE</code> to the code to sample from the prior. This will ensure that the model is identified by fixing the mean and variance of the latent variables. Plot the priors for the latent variable correlations. Are the resulting priors reasonable?</p>
+<p>Consider the resulting priors. Do they result in values for the latent variable covariances that are reasonable? <br> <br> You might find it difficult to determine whether the resulting priors for the latent variable covariances are reasonable or not. In this situation, it might be more insightful to consider the priors on the latent variable correlations since correlations have known bounds (i.e., a correlation must lie between -1 and 1). Add the argument <code>std.lv = TRUE</code> to the code to sample from the prior. This will ensure that the model is identified by fixing the mean and variance of the latent variables. Plot the priors for the latent variable correlations. Are the resulting priors reasonable?</p>
+</div>
+</div>
+<div id="adapting-the-priors" class="section level2">
+<h2>Adapting the priors</h2>
 <p>Now, let’s adapt the priors on the latent variable correlations. The <code>lkj_corr(1)</code> prior specified by default implies a <code>beta(1, 1)</code> prior which implies a uniform prior with support from -1 to 1. We can do so by adapting the model specification as follows:</p>
 <pre class="r"><code>HS.model2 &lt;- &#39; visual  =~ x1 + x2 + x3 
               textual =~ x4 + x5 + x6
@@ -230,7 +227,6 @@ plot(-1 + 2*x,
      ylab = &quot;&quot;,
      xlim = c(-1, 1))</code></pre>
 <p>Try out different values for the hyperparameters. Make sure to include values smaller than 1 as well as values larger than 1. Also make sure to use two equal and two different hyperparameters. Make sure that you understand the impact of changing these hyperparameters. We will use these results later on in the prior sensitivity analysis.</p>
-</div>
 </div>
 <div id="fit-the-model" class="section level2">
 <h2>Fit the model</h2>
