@@ -29,7 +29,9 @@ library(ggplot2)
 ## Bayesian analysis 
 
 <div style="float: left; width: 50%;">
-**Frequentist estimation** 
+**Frequentist estimation** \ 
+<br>
+<br>
 <ul>
   <li>Probability as long-run relative frequency</li>  
   <li>Parameters are fixed</li> 
@@ -38,7 +40,9 @@ library(ggplot2)
 </div>
 
 <div style="float: right; width: 50%;">
-**Bayesian estimation**  
+**Bayesian estimation** \ 
+<br>
+<br>
 <ul>
   <li>Probability as belief</li>   
   <li>Parameters are random and can be assigned a *prior*</li>   
@@ -106,14 +110,16 @@ Bayesian SEM: specify a prior for each parameter and build the posterior using M
 
 ## Types of priors
 
-- Priors vary in the amount of information they carry
-- From "non-informative" to highly informative
-- Informativeness of the prior depends on the problem
+<div style="float: left; width: 45%;">
+<ul>
+  <li>Priors vary in the amount of information they carry</li>  
+  <li>From "non-informative" to highly informative</li> 
+  <li>Informativeness of the prior depends on the problem</li> 
+</ul>
+</div>
 
-<br>
-<br>
-
-```{r fig.show = "hold", out.width = "33%", eval = TRUE, echo = FALSE}
+<div style="float: right; width: 55%;">
+```{r fig.show = "hold", out.width = "70%", eval = TRUE, echo = FALSE}
 n <- 10e5
 
 # non-informative
@@ -147,6 +153,7 @@ plot(density(rnorm(n, mean = 0, sd = sd3)),
      xlim = c(-5, 5))
 
 ```
+</div>
 
 ## A warning on default priors
 
@@ -272,10 +279,14 @@ mcmc_areas(na.omit(samples1),
 ```
 
 ## Step 2: Change the priors (2)
-```{r priors2, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE}
+```{r priors2psi, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE}
 mcmc_areas(na.omit(samples1),
            pars = pars[29])
+```
 
+---
+
+```{r priors2, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE, , echo = TRUE, eval = FALSE}
 priors2 <- bsem(mod0,
                 data = PoliticalDemocracy,
                 dp = dpriors(psi = "gamma(1,.5)[var]"),
@@ -284,6 +295,11 @@ priors2 <- bsem(mod0,
 samples2 <- as.matrix(blavInspect(priors2, what = "mcmc"))
 mcmc_areas(na.omit(samples2),
            pars = pars[29])
+```
+
+---
+
+```{r priors2, cache = TRUE, results = 'hide', message = FALSE, warning = FALSE, , echo = FALSE, eval = TRUE}
 ```
 
 ## Step 3: Run the model 
@@ -295,9 +311,14 @@ fit <- bsem(mod0,
             sample = 1000)
 ```
 
-## Step 4: Check convergence
+## Step 4: Check convergence {.smaller}
 ```{r}
 summary(fit)
+```
+
+
+---
+```{r}
 plot(fit, pars = c(1:8), plot.type = "trace")
 ```
 
