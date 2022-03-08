@@ -324,16 +324,16 @@ plot(fit, pars = c(1:8), plot.type = "trace")
 
 ## Step 5: Check the results (1)
 ```{r}
-plot(fit, pars = c(9:11), plot.type = "areas")
+plot(fit, pars = c(9:11), plot.type = "areas", prob = 0.8)
 ```
 
 ## Step 5: Check the results (2)
 ```{r}
-plot(fit, pars = c(1:8), plot.type = "intervals")
+plot(fit, pars = c(1:8), plot.type = "intervals", prob = 0.5, prob.outer = 0.9)
 ```
 
 ## Step 5: Check the results (3)
-```{r fitind, cache = TRUE}
+```{r fitind, cache = TRUE, warning = FALSE}
 fitind <- blavFitIndices(fit)
 summary(fitind)
 ```
@@ -352,46 +352,25 @@ summary(fitind)
 
 # Additional information
 
-## References 
-
-*General Bayesian (introductory) texts*
-<font size = "3">
+## References {.smaller}
+*General Bayesian (introductory) texts* \
 Etz, A., Gronau, Q. F., Dablander, F., Edelsbrunner, P. A., & Baribault, B. (2017). How to become a Bayesian in eight easy steps: An annotated reading list. Psychonomic Bulletin & Review, 25(1), 219–234. \
-
 Depaoli, S., & Van de Schoot, R. (2017). Improving transparency and replication in Bayesian statistics: The WAMBS-Checklist. Psychological methods, 22(2), 240.\
-
 Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013). Bayesian data analysis (3rd ed.). Chapman and Hall/CRC. \
-</font>
-<br>
 
-*Bayesian SEM*
-<font size = "3">
+*Bayesian SEM* \
 Depaoli, S. (2021). Bayesian Structural Equation Modeling. Guilford Press. \
-
 Lee, S-Y. (2007). Structural Equation Modeling: A Bayesian Approach. Wiley. \
-</font>
-<br>
 
-*Prior sensitivity*
-<font size = "3">
-Van Erp, S., Mulder, J., & Oberski, D. L. (2018). Prior sensitivity analysis in default bayesian structural equation modeling. Psychological Methods, 23(2), 363-388. \
-
+*Prior sensitivity* \
+Van Erp, S., Mulder, J., & Oberski, D. L. (2018). Prior sensitivity analysis in default Bayesian structural equation modeling. Psychological Methods, 23(2), 363-388. \
 Van Erp, S. & Browne, W. J. (2021). Bayesian Multilevel Structural Equation Modeling: An Investigation into Robust Prior Distributions for the Doubly Latent Categorical Model. Structural Equation Modeling: A Multidisciplinary Journal, 28:6, 875-893.
-</font>
-<br>
 
-*Blavaan*
-<font size = "3">
+## References {.smaller}
+*Blavaan* \
 Merkle, E. C., & Rosseel, Y. (2018). blavaan: Bayesian Structural Equation Models via Parameter Expansion. Journal of Statistical Software, 85, 1-30. \
-
 Merkle, E. C., Fitzsimmons, E., Uanhoro, J., & Goodrich, B. (2021). Efficient Bayesian Structural Equation Modeling in Stan. Journal of Statistical Software, 100, 1-22. \
-
 [Online tutorial](https://www.rensvandeschoot.com/tutorials/blavaan-how-to-get-started/) \
-</font>
-<br>
 
-*Fit indices*
-<font size = "3">
+*Fit indices* \
 Garnier-Villarreal, M., & Jorgensen, T. D. (2020). Adapting fit indices for Bayesian structural equation modeling: Comparison to maximum likelihood. Psychological Methods, 25(1), 46.
-
-</font>
