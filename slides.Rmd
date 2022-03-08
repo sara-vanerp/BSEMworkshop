@@ -1,10 +1,12 @@
 ---
 title: "Bayesian Structural Equation Modeling"
-author: "[Sara van Erp](https://saravanerp.com), s.j.vanerp@uu.nl"
+author: '[Sara van Erp](https://saravanerp.com), s.j.vanerp@uu.nl'
 date: "09-03-2022"
-output: 
-  ioslides_presentation: 
-    incremental: false
+output:
+  beamer_presentation:
+    incremental: no
+  ioslides_presentation:
+    incremental: no
 ---
 
 ```{r setup, include=FALSE}
@@ -363,6 +365,9 @@ summary(fitind)
 - Goal is to get an idea of the robustness of the results
 
 # Exercises
+
+## Exercises
+Work through the exercises [here](https://github.com/sara-vanerp/BSEMworkshop/blob/main/exercises.pdf). Feel free to adapt the exercises to work with your own data.
 
 # Additional information
 
