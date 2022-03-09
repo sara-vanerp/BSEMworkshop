@@ -3,9 +3,11 @@ title: "Bayesian Structural Equation Modeling"
 author: '[Sara van Erp](https://saravanerp.com), s.j.vanerp@uu.nl'
 date: "09-03-2022"
 output:
-  beamer_presentation:
-    incremental: no
   ioslides_presentation:
+    incremental: no
+  slidy_presentation:
+    incremental: no
+  beamer_presentation:
     incremental: no
 ---
 
@@ -19,7 +21,6 @@ library(ggplot2)
   + Bayesian analysis
   + Why use Bayesian SEM?
   + Why not to use Bayesian SEM?
-- Break
 - Prior specification
   + Hands-on session prior specification
 - A Bayesian SEM example
